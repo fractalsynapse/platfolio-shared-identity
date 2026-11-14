@@ -15,7 +15,11 @@ services:
     environment:
       KC_DB: postgres
       KC_HEALTH_ENABLED: "true"
-      KEYCLOAK_ADMIN: admin
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      # The bootstrap admin pair Keycloak 26.x actually reads. `KEYCLOAK_ADMIN` was the name here before, and it
+      # is deprecated -- our own dev overlay (compose.dev.yaml) already uses the bootstrap pair, so the template
+      # and the platform disagreed about how to create the same admin. The password is NOT set here: it is a
+      # declared secret obligation, because a credential in a committed file is the one thing D4 forbids.
     expose: ["8080"]
     healthcheck:
       test: ["CMD", "sh", "-c", "exec 3<>/dev/tcp/127.0.0.1/8080 && printf 'GET /auth/realms/master/protocol/openid-connect/certs HTTP/1.0\\r\\n\\r\\n' >&3 && head -1 <&3 | grep -q 200"]
@@ -29,7 +33,11 @@ x-platfolio:
     version: 0.1.0
     title: Shared Identity (Keycloak)
     summary: One OIDC issuer for a team's web, worker and shared services, with realms as the tenant unit.
-    archetype: shared-service
+    # D51: the kind is web (it accepts connections); the mode is hosted, because nobody develops
+    # Keycloak here -- it pulls a published image and a database template and runs production. The shared part
+    # is the `provides` block below, which was always a declaration rather than a shape.
+    kind: web
+    mode: hosted
     license: Apache-2.0
   requires:
     platfolio: ">=0.4.0 <1"
