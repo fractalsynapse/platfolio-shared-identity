@@ -57,7 +57,7 @@ variables:
   note: Keycloak assembles its JDBC connection from the database service.
 - name: KC_DB_PASSWORD
   kind: reference
-  secret: true
+  secret: false
   environments: all
   service: keycloak
   database: keycloak-db
