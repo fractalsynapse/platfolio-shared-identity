@@ -11,6 +11,7 @@ name: shared-identity
 services:
   keycloak:
     image: keycloak/keycloak:26.8.2
+    entrypoint: ["/opt/keycloak/bin/kc.sh"]
     command: ["start"]
     environment:
       KC_DB: postgres
