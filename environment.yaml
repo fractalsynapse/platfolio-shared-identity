@@ -19,15 +19,51 @@ variables:
   deployedTo: tenant:to-supply
   note: Bootstrap administrator password, paired with KC_BOOTSTRAP_ADMIN_USERNAME in compose.yaml. Set it once,
     create your realm, then rotate it out of use.
-- name: KC_DB_URL
+- name: KC_DB_URL_HOST
   kind: reference
   secret: false
   environments: all
   service: keycloak
   database: keycloak-db
-  output: DATABASE_URL
+  output: PGHOST
   deployedTo: railway:reference
-  note: declared by shared-identity
+  note: Keycloak assembles its JDBC connection from the database service.
+- name: KC_DB_URL_PORT
+  kind: reference
+  secret: false
+  environments: all
+  service: keycloak
+  database: keycloak-db
+  output: PGPORT
+  deployedTo: railway:reference
+  note: Keycloak assembles its JDBC connection from the database service.
+- name: KC_DB_URL_DATABASE
+  kind: reference
+  secret: false
+  environments: all
+  service: keycloak
+  database: keycloak-db
+  output: POSTGRES_DB
+  deployedTo: railway:reference
+  note: Keycloak assembles its JDBC connection from the database service.
+- name: KC_DB_USERNAME
+  kind: reference
+  secret: false
+  environments: all
+  service: keycloak
+  database: keycloak-db
+  output: POSTGRES_USER
+  deployedTo: railway:reference
+  note: Keycloak assembles its JDBC connection from the database service.
+- name: KC_DB_PASSWORD
+  kind: reference
+  secret: true
+  environments: all
+  service: keycloak
+  database: keycloak-db
+  output: POSTGRES_PASSWORD
+  deployedTo: railway:reference
+  note: Keycloak assembles its JDBC connection from the database service.
 - name: KC_HOSTNAME
   kind: value
   secret: false
